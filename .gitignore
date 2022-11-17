@@ -1,0 +1,6 @@
+.git
+.idea
+.node-persist
+yarn-error.log
+node_modules
+config/config.json
