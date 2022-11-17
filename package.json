@@ -5,9 +5,10 @@
   "license": "apache-2.0",
   "dependencies": {
     "@lexmachina/lexmachina-client": "^0.3.5",
+    "express": "^4.18.2",
     "node-persist": "^3.1.0"
   },
   "scripts": {
-    "start": "node ./src/main.js"
+    "start": "node ./src/server.js"
   }
 }
