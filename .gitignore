@@ -4,3 +4,4 @@
 yarn-error.log
 node_modules
 config/config.json
+config/main.json

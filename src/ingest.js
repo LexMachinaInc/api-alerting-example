@@ -1,8 +1,7 @@
 const { LexMachinaClient, CasesQueryRequest } = require("@lexmachina/lexmachina-client");
+const { lawFirmId, startDate } = require("./config");
 
 const client = new LexMachinaClient("config/config.json");
-const lawFirmId = 3277;
-const startDate = "2022-10-01";
 
 function getJudgeList(districtCase) {
     return [...districtCase.judges, ...districtCase.magistrateJudges];
@@ -32,10 +31,9 @@ function getPlaintiffLawFirms(districtCase) {
 async function getCasesFirmForDefendant() {
     const query = new CasesQueryRequest()
         .setDate(startDate, "filed", "onOrAfter")
-        .addLawFirmsIncludeDefendant(lawFirmId)
-        .setPageSize(100);
+        .addLawFirmsIncludeDefendant(lawFirmId);
 
-    const cases = await client.queryDistrictCases(query);
+    const cases = await client.queryDistrictCases(query, { pageThrough: true });
     const casesEnhanced = cases.map(async (caseId) => {
         const districtCase = await client.districtCases(caseId);
         return {

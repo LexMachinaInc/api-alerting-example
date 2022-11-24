@@ -13,7 +13,9 @@ app.get("/", (request, response) => {
 });
 
 app.listen(PORT, async () => {
+    console.log("Acquiring data from LexMachina API...");
     const cases = await getCasesFirmForDefendant();
+    console.log("Done.")
     caseDataFromAPI = cases
         .sort((current, next) => current.caseMeta.filingDate === next.caseMeta.filingDate ? 0 : current.caseMeta.filingDate > next.caseMeta.filingDate ? -1 : 1)
         .map((districtCase) => ({...districtCase, links: getAllLinks(districtCase), contact: districtCase.defendantAttorney}));
