@@ -7,6 +7,8 @@ const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config/mai
 module.exports = {
     lawFirmId: config.lawFirmId,
     startDate: format(sub(new Date(), { days: config.rollingDays}), 'yyyy-MM-dd'),
+    myFirmName: config.myFirmName,
+    defaultEmail: config.defaultEmail,
 }
 
 

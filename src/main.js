@@ -1,4 +1,4 @@
-const getCasesFirmForDefendant = require("./ingest");
+const { getCasesFirmForDefendant } = require("./ingest");
 const getAllLinks = require("./links");
 const { printAlertByCase } = require("./email");
 
