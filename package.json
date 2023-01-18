@@ -1,5 +1,5 @@
 {
-  "name": "lexmachina-alerting-example",
+  "name": "@lexmachina/api-alerting-example",
   "version": "1.0.0",
   "main": "src/main.js",
   "license": "apache-2.0",
