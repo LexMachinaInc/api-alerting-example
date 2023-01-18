@@ -28,29 +28,36 @@ function getPlaintiffLawFirms(districtCase) {
         }));
 }
 
-async function getCasesFirmForDefendant() {
-    const query = new CasesQueryRequest()
-        .setDate(startDate, "filed", "onOrAfter")
-        .addLawFirmsIncludeDefendant(lawFirmId);
+const sortByFilingDate = (current, next) =>
+  current.caseMeta.filingDate === next.caseMeta.filingDate
+    ? 0
+    : current.caseMeta.filingDate > next.caseMeta.filingDate
+    ? -1
+    : 1;
 
-    const cases = await client.queryDistrictCases(query, { pageThrough: true });
-    const casesEnhanced = cases.map(async (caseId) => {
-        const districtCase = await client.districtCases(caseId);
-        return {
-            judges: getJudgeList(districtCase),
-            plaintiffCounsel: getPlaintiffLawFirms(districtCase),
-            defendantAttorney: getDefenseCounsel(districtCase),
-            caseMeta: {
-                caseId: districtCase.caseId,
-                caseNumber: districtCase.caseNo,
-                caseType: districtCase.caseType[0],
-                court: districtCase.court,
-                filingDate: districtCase.dates.filed,
-                title: districtCase.title,
-            },
-        };
-    });
-    return Promise.all(casesEnhanced);
+async function getCasesFirmForDefendant() {
+  const query = new CasesQueryRequest()
+    .setDate(startDate, "filed", "onOrAfter")
+    .addLawFirmsIncludeDefendant(lawFirmId);
+
+  const cases = await client.queryDistrictCases(query, { pageThrough: true });
+  const casesEnhanced = cases.map(async (caseId) => {
+    const districtCase = await client.districtCases(caseId);
+    return {
+      judges: getJudgeList(districtCase),
+      plaintiffCounsel: getPlaintiffLawFirms(districtCase),
+      defendantAttorney: getDefenseCounsel(districtCase),
+      caseMeta: {
+        caseId: districtCase.caseId,
+        caseNumber: districtCase.caseNo,
+        caseType: districtCase.caseType[0],
+        court: districtCase.court,
+        filingDate: districtCase.dates.filed,
+        title: districtCase.title,
+      },
+    };
+  });
+  return Promise.all(casesEnhanced);
 }
 
-module.exports = getCasesFirmForDefendant;
+module.exports = { getCasesFirmForDefendant, sortByFilingDate };

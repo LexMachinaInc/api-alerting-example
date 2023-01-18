@@ -1,11 +1,12 @@
 const { getMailtoLink } = require('./email');
+const { myFirmName } = require("./config");
 
 function base(content) {
     return `
 <!doctype html>
 <html>
     <head>
-        <title>Cases representing defendant</title>
+        <title>Cases with ${myFirmName} representing defendant</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0">
         <style>
@@ -66,7 +67,7 @@ function caseItem(content) {
                     ${listNameUrls(content.links.earlyCaseAssessor)}
                 <div/>
                 <div class="actions">
-                    <a href="${getMailtoLink(content.caseMeta,content.links)}">Alert Defense Counsel</a>
+                    <a href="${getMailtoLink(content.defendantAttorney ,content.caseMeta,content.links)}">Alert Defense Counsel</a>
                 </div>
             </article>        
 `;
