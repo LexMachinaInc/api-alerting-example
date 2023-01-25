@@ -1,31 +1,40 @@
-const { LexMachinaClient, CasesQueryRequest } = require("@lexmachina/lexmachina-client");
-const { lawFirmId, startDate } = require("./config");
+const {
+  LexMachinaClient,
+  CasesQueryRequest,
+} = require("@lexmachina/lexmachina-client");
+const { lawFirmId, myFirmName, startDate } = require("./config");
+const getAllLinks = require("./links");
 
 const client = new LexMachinaClient("config/config.json");
 
+const casesData = [];
+const defenseAttyData = [];
+
 function getJudgeList(districtCase) {
-    return [...districtCase.judges, ...districtCase.magistrateJudges];
+  return [...districtCase.judges, ...districtCase.magistrateJudges];
 }
 
 function getDefenseCounsel(districtCase) {
-    return districtCase.attorneys
-        .filter((attorney) => attorney.lawFirmIds.includes(lawFirmId))
-        .map(({name, attorneyId}) => ({name, attorneyId}));
+  return districtCase.attorneys
+    .filter((attorney) => attorney.lawFirmIds.includes(lawFirmId))
+    .map(({ name, attorneyId }) => ({ name, attorneyId }));
 }
 
 function getPlaintiffLawFirms(districtCase) {
-    const plaintiffParties = districtCase.parties
-        .filter(({role}) => role === "Plaintiff") ?? [];
-    const plaintiffPartyIds = plaintiffParties.map(({partyId}) => (partyId));
-    return districtCase.lawFirms
-        .filter(({clientPartyIds}) => clientPartyIds.some((partyId) => plaintiffPartyIds.includes(partyId)))
-        .map((firm) => ({
-            firmName: firm.name,
-            firmId: firm.lawFirmId,
-            plaintiffClients: plaintiffParties
-                .filter(({partyId}) => firm.clientPartyIds.includes(partyId))
-                .map(({name, partyId}) => ({name, partyId})),
-        }));
+  const plaintiffParties =
+    districtCase.parties.filter(({ role }) => role === "Plaintiff") ?? [];
+  const plaintiffPartyIds = plaintiffParties.map(({ partyId }) => partyId);
+  return districtCase.lawFirms
+    .filter(({ clientPartyIds }) =>
+      clientPartyIds.some((partyId) => plaintiffPartyIds.includes(partyId))
+    )
+    .map((firm) => ({
+      firmName: firm.name,
+      firmId: firm.lawFirmId,
+      plaintiffClients: plaintiffParties
+        .filter(({ partyId }) => firm.clientPartyIds.includes(partyId))
+        .map(({ name, partyId }) => ({ name, partyId })),
+    }));
 }
 
 const sortByFilingDate = (current, next) =>
@@ -60,4 +69,52 @@ async function getCasesFirmForDefendant() {
   return Promise.all(casesEnhanced);
 }
 
-module.exports = { getCasesFirmForDefendant, sortByFilingDate };
+async function getAllData() {
+  console.log("Acquiring data from LexMachina API...");
+
+  const [cases, attorneys] = await Promise.all([
+    getCasesFirmForDefendant(),
+    client.searchAttorneys(myFirmName),
+  ]);
+
+  attorneys.forEach(({ attorneyId, name }) => {
+    defenseAttyData.push({
+      attorneyId,
+      name: name.replace(/\s+\(.*\)/, ""),
+      email: "",
+    });
+  });
+
+  cases.sort(sortByFilingDate).forEach((_case) => {
+    casesData.push({
+      ..._case,
+      links: getAllLinks(_case),
+    });
+    _case.defendantAttorney.forEach((atty) => {
+      if (
+        !defenseAttyData.some(
+          ({ attorneyId }) => attorneyId === atty.attorneyId
+        )
+      ) {
+        defenseAttyData.push({
+          attorneyId: atty.attorneyId,
+          name: atty.name,
+          email: "",
+        });
+      }
+    });
+  });
+
+  casesData.forEach((_case) => {
+    const contact = _case.defendantAttorney.map(({ attorneyId }) => {
+      return ({ name, email } = defenseAttyData.find(
+        (atty) => atty.attorneyId === attorneyId
+      ));
+    });
+    Object.assign(_case, { contact });
+  });
+
+  console.log("Done.");
+}
+
+module.exports = { getAllData, casesData, defenseAttyData };

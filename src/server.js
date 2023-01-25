@@ -1,27 +1,29 @@
 const express = require("express");
-const { getCasesFirmForDefendant, sortByFilingDate } = require("./ingest");
+const { getAllData, casesData, defenseAttyData } = require("./ingest");
 const templates = require("./template");
-const getAllLinks = require("./links");
 
 const app = express();
 const PORT = process.env.PORT || 4200;
-const casesDataFromAPI = [];
 
 app.get("/", (request, response) => {
-    const content = casesDataFromAPI.reduce((content, next) => (`${content}\n${templates.caseItem(next)}`), "");
-    response.send(templates.base(content));
+  const content = casesData.reduce((content, next) => (`${content}\n${templates.caseItem(next)}`), "");
+  response.send(templates.base(content));
+});
+
+app.get("/address-list", async (request, response) => {
+  response.send('address list');
+});
+
+app.get("/autosend", (request, response) => {
+  response.send('autosend');
+});
+
+app.get("/refresh", async (request, response) => {
+  await getAllData();
+  response.send(200)
 });
 
 app.listen(PORT, async () => {
-  console.log("Acquiring data from LexMachina API...");
-  const cases = await getCasesFirmForDefendant();
-  console.log("Done.");
-  casesDataFromAPI.push(...cases
-    .sort(sortByFilingDate)
-    .map((districtCase) => ({
-      ...districtCase,
-      links: getAllLinks(districtCase),
-      contact: districtCase.defendantAttorney,
-    })));
+  await getAllData();
   console.log(`Server started on port ${PORT}`);
 });
