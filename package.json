@@ -11,5 +11,8 @@
   },
   "scripts": {
     "start": "node ./src/server.js"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.3"
   }
 }
