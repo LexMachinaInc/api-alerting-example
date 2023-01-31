@@ -1,0 +1,15 @@
+<main class="container is-0-desktop">
+
+    <header class="block link-block sticky">
+
+
+        <h1 class="title">Cases</h1>
+
+
+    </header>
+    <section>
+        <% cases.forEach((_case) => { %>
+            <%- include("case", {_case}); %>
+        <% }); %>
+    </section>
+</main>

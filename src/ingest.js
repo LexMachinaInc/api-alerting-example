@@ -2,7 +2,8 @@ const {
   LexMachinaClient,
   CasesQueryRequest,
 } = require("@lexmachina/lexmachina-client");
-const { lawFirmId, myFirmName, startDate } = require("./config");
+const storage = require("node-persist");
+const { lawFirmId, myFirmName, startDate, defaultEmail } = require("./config");
 const getAllLinks = require("./links");
 
 const client = new LexMachinaClient("config/config.json");
@@ -69,7 +70,7 @@ async function getCasesFirmForDefendant() {
   return Promise.all(casesEnhanced);
 }
 
-async function getAllData() {
+async function getAPIData() {
   console.log("Acquiring data from LexMachina API...");
 
   const [cases, attorneys] = await Promise.all([
@@ -78,11 +79,13 @@ async function getAllData() {
   ]);
 
   attorneys.forEach(({ attorneyId, name }) => {
-    defenseAttyData.push({
-      attorneyId,
-      name: name.replace(/\s+\(.*\)/, ""),
-      email: "",
-    });
+    if (!defenseAttyData.some((atty) => atty.attorneyId === attorneyId)) {
+      defenseAttyData.push({
+        attorneyId,
+        name: name.replace(/\s+\(.*\)/, ""),
+        email: defaultEmail,
+      });
+    }
   });
 
   cases.sort(sortByFilingDate).forEach((_case) => {
@@ -99,11 +102,13 @@ async function getAllData() {
         defenseAttyData.push({
           attorneyId: atty.attorneyId,
           name: atty.name,
-          email: "",
+          email: defaultEmail,
         });
       }
     });
   });
+
+  storage.setItem("defenseAttyData", defenseAttyData);
 
   casesData.forEach((_case) => {
     const contact = _case.defendantAttorney.map(({ attorneyId }) => {
@@ -115,6 +120,16 @@ async function getAllData() {
   });
 
   console.log("Done.");
+  return true;
 }
 
-module.exports = { getAllData, casesData, defenseAttyData };
+async function getInitialData() {
+  console.log("Retrieving stored app data");
+  const storedDefenseAttyData = await storage.getItem("defenseAttyData") ?? [];
+  defenseAttyData.push(...storedDefenseAttyData);
+  console.log("Done.");
+
+  return await getAPIData();
+}
+
+module.exports = { casesData, defenseAttyData, getAPIData, getInitialData };

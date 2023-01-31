@@ -1,0 +1,33 @@
+<main class="container is-0-desktop">
+    <header class="block link-block sticky">
+
+
+                <h1 class="title">Contacts</h1>
+
+                <button type="submit" class="button">Update addresses</button>
+
+    </header>
+
+    <section>
+        <form action="/update-address" method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Email</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% contacts.forEach(({ attorneyId, email, name }) => { %>
+                        <tr>
+                            <td><%= name %></td>
+                            <td>
+                                <input type="text" name="email-<%= attorneyId %>" size="25" value="<%= email %>" />
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </form>
+    </section>
+</main>

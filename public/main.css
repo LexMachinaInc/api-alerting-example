@@ -1,0 +1,12 @@
+.link-block {
+    column-count: 2;
+    column-gap: 2em;
+    column-width: 36em;
+    margin: 1em;
+}
+
+header.sticky {
+    position: sticky;
+    top: 0;
+    background: #fff;
+}

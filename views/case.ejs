@@ -1,0 +1,49 @@
+<article class="card mb-5">
+    <section class="card-header">
+        <h2 class="card-header-title"><%= _case.caseMeta.title %></h2>
+    </section>
+
+    <div class="card-content">
+        <div class="columns">
+            <div class="column">
+                <ul>
+                    <li><strong>Court:</strong> <%= _case.caseMeta.court %>}</li>
+                    <li><strong>Case Number:</strong> <%= _case.caseMeta.caseNumber%></li>
+                    <li><strong>Case Type:</strong> <%= _case.caseMeta.caseType%></li>
+                    <li><strong>Filing Date:</strong> <%= _case.caseMeta.filingDate %></li>
+                </ul>
+            </div>
+            <% if (_case.defendantAttorney.length > 0) {%>
+            <div class="column">
+                <strong>In-house counsel</strong>
+                <% _case.defendantAttorney.forEach(({name, attorneyId}) => { %>
+                    <p><a href="mailto:<%= helpers.getMailtoLink(helpers.getContact(attorneyId), _case.caseMeta, _case.links) %>"><%= name %></a></p>
+                <% }); %>
+            </div>
+            <% } %>
+        </div>
+
+    </div>
+
+    <% if (_case.links.judges.length > 0) { %>
+    <div class="card-content">
+        <strong>Judge(s) presiding over this case:</strong>
+        <div>
+            <% _case.links.judges.forEach(({name, url}) => { %>
+                <p><a href="<%= url %>"><%= name %></a></p>
+            <% }); %>
+        </div>
+
+    </div>
+    <% } %>
+    <% if (_case.links.earlyCaseAssessor.length > 0) { %>
+    <div class="card-content">
+        <strong>Use the Early Case Assessor Quicktool:</strong>
+        <div class="link-block">
+        <% _case.links.earlyCaseAssessor.forEach(({name, url}) => { %>
+                <p><a href="<%= url %>"><%= name %></a></p>
+        <% }); %>
+        </div>
+    </div>
+    <% } %>
+</article>
