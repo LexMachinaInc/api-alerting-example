@@ -1,10 +1,13 @@
 ## Lex Machina API Alerting Example
 
-This sample application uses the Lex Machina API to gather a list of cases where your firm represents the defendant.
+This sample "starter pack" application uses the Lex Machina API to gather a list of cases where your firm represents the defendant.
 
-This "starter pack" application uses the Lex Machina API to retrieve case, judge, and counsel data. The setup instructions below assume you have an account at [Lex Machina Developer Portal](https://developer.lexmachina.com/), you have registered this app and have received your API keys.
+Starting the server will retrieve a case list and for each include judge and counsel data. 
 
- - [My Apps: Developer Portal](https://developer.lexmachina.com/my-apps) to register your app.
+The setup instructions below assume you have an account at [Lex Machina Developer Portal](https://developer.lexmachina.com/),
+you have registered this app and have received and activated an app ID and secret.
+
+ - [My Apps: Developer Portal](https://developer.lexmachina.com/my-apps) to register and enable your app.
  - Select API "Lex Machina API Beta".
  - Generate an API key and secret.
 
@@ -15,13 +18,13 @@ Steps to get started:
     ```
    {
         "client": {
-            "id": "YOUR-48-CHARACTER-API-KEY",
-            "secret": "YOUR-60-CHARACTER-SECRET"
+            "id": "YOUR-32-CHARACTER-API-KEY",
+            "secret": "YOUR-32-CHARACTER-SECRET"
         },
-        "auth": {
-            "tokenHost": "https://api.lexmachina.com",
-            "tokenPath": "/oauth/client_credential/accesstoken"
-        }
+         "auth": {
+            "tokenHost": "https://api.beta.lexmachina.com",
+            "tokenPath": "/oauth2/token"
+         }
     }
     ```
    **Note**: Do not share the API secret with anyone or add it to a code repository.
