@@ -4,7 +4,7 @@ const {
 } = require("@lexmachina/lexmachina-client");
 const storage = require("node-persist");
 const { lawFirmId, myFirmName, startDate, defaultEmail } = require("./config");
-const getAllLinks = require("./links");
+const { getAllLinks } = require("./links");
 
 const client = new LexMachinaClient("config/config.json");
 

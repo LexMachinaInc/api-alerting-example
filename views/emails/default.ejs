@@ -1,0 +1,32 @@
+
+<p>
+    Greetings. Please find below links to an automatic report providing litigation analytics and judge analytics.
+    These analytics may be relevant for a case in which a <%= myFirmName %> lawyer recently appeared in federal district court for the defense.
+</p>
+
+<p>
+    These Legal Analytics are from:<br />
+    (a) Lex Machina's Early Case Assessor, which provides a report for any case based on the track record in federal district court of the plaintiff and its law firm, and<br />
+    (b) Lex Machina's Judge Analytics for the federal district court judge assigned to the case.
+</p>
+
+<p>
+    Case: <a href="#"><%= caseMeta.title %></a> <%= caseMeta.court %> <%= caseMeta.caseNumber %>
+    <%= myFirmName %> attorneys representing defendants: <%= defendantAttorney.map((atty) => (` ${atty.name} `)) %>
+</p>
+
+<p>
+    (a) <% plaintiffCounsel.forEach((pco) => { %>
+        <% pco.plaintiffClients.forEach((pcl) => { %>
+            <a href="#">Early Case Assessor results</a> for plaintiff <strong><%= pcl.name %></strong> and the law firm <strong><%= pco.firmName %></strong> and <%= caseMeta.caseType %>.<br />
+        <% }) %>
+    <% }); %>
+</p>
+
+<p>
+    (b) Federal District Court Judge Assigned: <strong><%= judges.map((judge) => (` ${judge.name} `)) %></strong><br />
+    <% judges.forEach((judge) => { %>
+        <a href="#">Judge Analytics Summary for Judge <%= judge.name %></a><br />
+        <a href="#">Legal Analytics for Judge <%= judge.name %> in <%= caseMeta.caseType %> cases</a><br />
+    <% }); %>
+</p>

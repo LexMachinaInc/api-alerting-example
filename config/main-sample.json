@@ -2,5 +2,8 @@
   "lawFirmId": 0,
   "rollingDays": 120,
   "myFirmName": "Law Firm",
-  "defaultEmail": "test@example.com"
+  "defaultEmail": "test@example.com",
+  "emailHost": "smtp.example.com",
+  "emailUser": "username",
+  "emailPassword": "password"
 }

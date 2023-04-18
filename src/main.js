@@ -1,6 +1,6 @@
 const { getCasesFirmForDefendant } = require("./ingest");
-const getAllLinks = require("./links");
-const { printAlertByCase } = require("./email");
+const { getAllLinks } = require("./links");
+
 
 (function () {
   getCasesFirmForDefendant()
@@ -12,7 +12,7 @@ const { printAlertByCase } = require("./email");
       }))
     )
     .then((cases) =>
-      cases.forEach(({ contact, links, meta }) => printAlertByCase(contact, meta, links))
+      cases.forEach(({ contact, links, meta }) => console.log(contact, meta, links))
     );
 })();
 
