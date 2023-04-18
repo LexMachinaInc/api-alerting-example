@@ -33,10 +33,13 @@ Steps to get started:
 
     ``` 
    {
-        "lawFirmId": 12345 [or the Lex Machina law firm ID number of your firm],
-        "rollingDays": 90 [number of days in the past to search],
-        "myFirmName": "Your Law Firm Name",
-        "defaultEmail": "test@example.com [a default email address to send alerts to, useful for testing]"
+      "lawFirmId": 12345 [or the Lex Machina law firm ID number of your firm],
+      "rollingDays": 90 [number of days in the past to search],
+      "myFirmName": "Your Law Firm Name",
+      "defaultEmail": "test@example.com [a default email address to send alerts to, useful for testing]"
+      "emailHost": "smtp.example.com", [this is the url to your outgoing email (SMTP) server]
+      "emailUser": "username", [the login credentials for the emailHost server]
+      "emailPassword": "password" [the login credentials for the emailHost server]
     }
    ```
    
