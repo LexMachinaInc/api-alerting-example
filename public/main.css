@@ -1,0 +1,40 @@
+a {
+    color: #00e;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.link-block {
+    column-count: 2;
+    column-gap: 2em;
+    column-width: 36em;
+}
+
+main > header {
+    padding: 0.5em 0 2em;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header.sticky {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+}
+
+.card {
+    margin-top: 0.5em;
+}
+
+nav a {
+    margin: 1em;
+}

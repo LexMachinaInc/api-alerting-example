@@ -1,0 +1,17 @@
+<main>
+    <header class="sticky">
+        <div class="container header is-0-desktop">
+            <h1 class="title">Cases</h1>
+            <nav>
+                <a href="/" class="disabled">Cases</a>
+                <a href="/contacts">Contacts</a>
+                <a href="/send-alerts">Send Alerts</a>
+            </nav>
+        </div>
+    </header>
+    <section class="container is-0-desktop">
+        <% cases.forEach((_case) => { %>
+            <%- include("case", {_case}); %>
+        <% }); %>
+    </section>
+</main>

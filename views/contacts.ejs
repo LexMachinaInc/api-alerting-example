@@ -1,0 +1,40 @@
+<main>
+    <header class="sticky">
+        <div class="container header is-0-desktop">
+            <h1 class="title">Contacts</h1>
+            <nav>
+                <a href="/">Cases</a>
+                <a href="/contacts"class="disabled">Contacts</a>
+                <a href="/send-alerts">Send Alerts</a>
+            </nav>
+        </div>
+    </header>
+    <section class="container is-0-desktop">
+        <form id="update" action="/update-address" method="post">
+            <div class="block">
+                <button type="submit" class="button">Update addresses</button>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Email</td>
+                </tr>
+                </thead>
+                <tbody>
+                    <% contacts.forEach(({ attorneyId, email, name }) => { %>
+                        <tr>
+                            <td><%= name %></td>
+                            <td>
+                                <input type="text" name="<%= attorneyId %>" size="25" value="<%= email %>" />
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </form>
+    </section>
+</main>
+<script src="/contacts.js"></script>
+
+

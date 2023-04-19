@@ -1,4 +1,4 @@
-
+const { getMailtoLink } = require("./email");
 
 function getAllLinks({ caseMeta: { caseId, caseType, title }, judges, plaintiffCounsel }) {
   return {
@@ -6,6 +6,26 @@ function getAllLinks({ caseMeta: { caseId, caseType, title }, judges, plaintiffC
     judges: getJudgeLinks(judges),
     earlyCaseAssessor: invertPlaintiffCounsel(plaintiffCounsel).map((plaintiff) => getEarlyCaseAssessorLink(plaintiff, caseType)),
   };
+}
+
+async function getMailtoLinks(cases, contacts) {
+  return await cases.map(async(_case) => {
+    const defendantAttorney = await _case.defendantAttorney.reduce(async(agg, next) => {
+      const contact = contacts.find(
+        (a) => a.attorneyId === next.attorneyId && a.hasOwnProperty("email")
+      );
+      if (contact) {
+        const mailto = await getMailtoLink(_case, contact.name, contact.email);
+        agg.push({
+          name: contact.name,
+          url: mailto,
+        });
+      }
+      return agg;
+    }, []);
+    _case.links["defendantAttorney"] = await defendantAttorney;
+    return await _case;
+  });
 }
 
 function getJudgeLinks(judges) {
@@ -36,4 +56,4 @@ function getEarlyCaseAssessorLink({plaintiff, lawFirm}, caseType) {
   };
 }
 
-module.exports = getAllLinks;
+module.exports = { getAllLinks, getMailtoLinks };
